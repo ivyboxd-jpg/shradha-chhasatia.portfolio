@@ -211,20 +211,12 @@
         .road-role { font-size: 1.5rem; font-weight: 800; margin-bottom: 5px; color: var(--text); line-height: 1.2;}
         .road-meta { font-size: 0.9rem; font-weight: 600; color: var(--text-dim); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
+        /* Fixed company link styles to not be blue */
         .company-link {
             color: var(--text); text-decoration: underline; text-decoration-color: var(--border);
             text-underline-offset: 4px; transition: all 0.2s; font-weight: 700;
         }
         .company-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
-
-        .cert-btn {
-            font-size: 0.75rem; text-decoration: none;
-            color: var(--text); border: 1px solid var(--border);
-            padding: 4px 12px; border-radius: 50px;
-            transition: 0.2s; background: white;
-            font-weight: 600;
-        }
-        .cert-btn:hover { border-color: var(--text); background: var(--text); color: white; }
 
         .road-bullets { list-style: none; margin-top: 10px; }
         .road-bullets li {
@@ -282,7 +274,8 @@
             padding: 80px 20px; text-align: center;
             border-radius: 32px 32px 0 0;
         }
-        .footer h2 { font-size: 2.5rem; margin-bottom: 30px; }
+        .footer h2 { font-size: 2.5rem; margin-bottom: 10px; }
+        .footer p { color: rgba(255,255,255,0.6); margin: 0 auto 40px; }
 
         .contact-wrapper { max-width: 500px; margin: 0 auto; }
         .form-group { margin-bottom: 15px; text-align: left; }
@@ -442,7 +435,7 @@
                     <div class="road-content">
                         <h3 class="road-role">Head of Product & GTM</h3>
                         <div class="road-meta">
-                            <a href="#" class="https://www.aavishkar-tech.in/" target="_blank">Aavishkar Technologies</a> • May 2026 - Present
+                            <a href="https://www.aavishkar-tech.in/" class="company-link" target="_blank">Aavishkar Technologies</a> • May 2026 - Present
                         </div>
                         <ul class="road-bullets">
                             <li>Leading end-to-end product development and executing comprehensive Go-To-Market (GTM) strategies.</li>
@@ -458,7 +451,7 @@
                     <div class="road-content">
                         <h3 class="road-role">Product & Growth Lead</h3>
                         <div class="road-meta">
-                            <a href="#" class="https://devvit-website.vercel.app/" target="_blank">Devvit</a> • Mar 2026 - Present
+                            <a href="https://devvit-website.vercel.app/" class="company-link" target="_blank">Devvit</a> • Feb 2026 - May 2026
                         </div>
                         <ul class="road-bullets">
                             <li>Ran a hackathon end-to-end, successfully onboarding 21 participants and 2 judges.</li>
@@ -475,9 +468,6 @@
                         <h3 class="road-role">Associate Project Manager Intern</h3>
                         <div class="road-meta">
                             <a href="https://4excelerate.org/" class="company-link" target="_blank">Excelerate</a> • Dec 2025 - Jan 2026
-                            <span style="color: #E6E3DC; margin: 0 5px;">|</span>
-                            <a href="#" class="cert-btn">Cert</a>
-                            <a href="#" class="cert-btn">LOR</a>
                         </div>
                         <ul class="road-bullets">
                             <li>Led a global team to deliver two projects on time, bridging time zones to hit every deadline.</li>
@@ -494,8 +484,6 @@
                         <h3 class="road-role">Project Manager Trainee</h3>
                         <div class="road-meta">
                             <a href="https://4excelerate.org/" class="company-link" target="_blank">Excelerate</a> • Nov 2025 - Dec 2025
-                            <span style="color: #E6E3DC; margin: 0 5px;">|</span>
-                            <a href="#" class="cert-btn">Cert</a>
                         </div>
                         <ul class="road-bullets">
                             <li>Built a 30-task masterclass plan that hit 100% of milestones despite schedule conflicts.</li>
@@ -545,7 +533,8 @@
     <!-- FOOTER -->
     <footer id="contact" class="footer reveal">
         <div class="contact-wrapper">
-            <h2>Ready to ship?</h2>
+            <h2>Say Hello.</h2>
+            <p>Always happy to connect with fellow builders, designers, and tech enthusiasts. Drop a message below!</p>
             
             <form action="https://formsubmit.co/your@email.com" method="POST" id="contactForm">
                 <div class="form-group">
@@ -555,7 +544,7 @@
                     <input type="email" name="email" placeholder="Email" required>
                 </div>
                 <div class="form-group">
-                    <textarea name="message" rows="3" placeholder="What problem are we solving?" required></textarea>
+                    <textarea name="message" rows="3" placeholder="Just saying hello..." required></textarea>
                 </div>
                 <button type="submit" class="submit-btn" id="sendBtn">Send Message</button>
             </form>
@@ -633,68 +622,3 @@
                 learning: "The importance of 'Happy Path' vs 'Edge Cases'. Handling errors gracefully (like failed uploads) is just as important as the success state.",
                 metrics:[
                     { val: "+30%", lbl: "Completion Rate" },
-                    { val: "-50%", lbl: "Support Tickets" },
-                    { val: "2min", lbl: "Avg Time Saved" }
-                ]
-            }
-        ];
-
-        const modal = document.getElementById('modal');
-
-        function openModal(index) {
-            const p = projects[index];
-            document.getElementById('m-title').innerText = p.title;
-            document.getElementById('m-cat').innerText = "Epic: " + p.category;
-            document.getElementById('m-problem').innerText = p.problem;
-            document.getElementById('m-solution').innerText = p.solution;
-            document.getElementById('m-learning').innerText = p.learning;
-
-            const mGrid = document.getElementById('m-metrics');
-            mGrid.innerHTML = '';
-            p.metrics.forEach(m => {
-                mGrid.innerHTML += `
-                    <div class="metric-box">
-                        <span class="m-val">${m.val}</span>
-                        <span class="m-lbl">${m.lbl}</span>
-                    </div>
-                `;
-            });
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        /* --- ANIMATIONS --- */
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-        
-        const timelineObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    document.getElementById('timeline').classList.add('active');
-                }
-            });
-        }, { threshold: 0.15 }); 
-        timelineObserver.observe(document.getElementById('experience'));
-
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            const btn = document.getElementById('sendBtn');
-            btn.innerText = "Sent ✓";
-            btn.style.background = "#4CAF50";
-            btn.style.color = "white";
-        });
-    </script>
-</body>
-</html>
