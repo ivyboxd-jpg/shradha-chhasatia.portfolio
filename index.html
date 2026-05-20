@@ -96,15 +96,19 @@
         .menu-btn:hover { transform: scale(1.05); background: var(--accent); }
         .line { width: 18px; height: 2px; background: white; border-radius: 2px; }
 
-        /* Nav Overlay (Fixed) */
+        /* Nav Overlay (Fixed) - BUG FIXED HERE with pointer-events */
         .nav-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             background: var(--accent); z-index: 2000; 
             display: flex; justify-content: center; align-items: center;
             flex-direction: column; clip-path: circle(0% at 50% 0%);
             transition: clip-path 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+            pointer-events: none; /* CRITICAL FIX: Stops it from blocking clicks when closed */
         }
-        .nav-overlay.active { clip-path: circle(150% at 50% 0%); }
+        .nav-overlay.active { 
+            clip-path: circle(150% at 50% 0%); 
+            pointer-events: auto; /* Re-enables clicks when open */
+        }
 
         .nav-link {
             font-family: var(--font-head); font-size: 3rem; font-weight: 800;
@@ -175,9 +179,7 @@
             margin: 0 8px 10px 0; background: white; color: var(--text);
             font-family: var(--font-body);
         }
-        .skill-pill::before {
-            content: ''; display: block; width: 8px; height: 8px; border-radius: 2px;
-        }
+        .skill-pill::before { content: ''; display: block; width: 8px; height: 8px; border-radius: 2px; }
         .skill-pm::before { background: #0052CC; } 
         .skill-ur::before { background: #FF8B00; } 
         .skill-pjm::before { background: #00875A; } 
@@ -201,7 +203,6 @@
             border-radius: 50%; z-index: 2; transition: border-color 0.5s ease;
         }
 
-        /* Active Timeline Markers */
         .road-item.active .road-marker { border-color: var(--accent); }
 
         .road-content { 
@@ -211,12 +212,21 @@
         .road-role { font-size: 1.5rem; font-weight: 800; margin-bottom: 5px; color: var(--text); line-height: 1.2;}
         .road-meta { font-size: 0.9rem; font-weight: 600; color: var(--text-dim); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-        /* Fixed company link styles to not be blue */
+        /* Custom link style for companies */
         .company-link {
             color: var(--text); text-decoration: underline; text-decoration-color: var(--border);
             text-underline-offset: 4px; transition: all 0.2s; font-weight: 700;
         }
         .company-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+        .cert-btn {
+            font-size: 0.75rem; text-decoration: none;
+            color: var(--text); border: 1px solid var(--border);
+            padding: 4px 12px; border-radius: 50px;
+            transition: 0.2s; background: white;
+            font-weight: 600;
+        }
+        .cert-btn:hover { border-color: var(--text); background: var(--text); color: white; }
 
         .road-bullets { list-style: none; margin-top: 10px; }
         .road-bullets li {
@@ -234,7 +244,6 @@
         .timeline.active .road-item .road-marker { border-color: var(--accent); }
         .timeline.active .road-item .road-content { opacity: 1; transform: translateX(0); }
         
-        /* Staggered delays */
         .timeline.active .road-item:nth-child(3) .road-marker, .timeline.active .road-item:nth-child(3) .road-content { transition-delay: 0.1s; }
         .timeline.active .road-item:nth-child(4) .road-marker, .timeline.active .road-item:nth-child(4) .road-content { transition-delay: 0.4s; }
         .timeline.active .road-item:nth-child(5) .road-marker, .timeline.active .road-item:nth-child(5) .road-content { transition-delay: 0.7s; }
@@ -468,6 +477,9 @@
                         <h3 class="road-role">Associate Project Manager Intern</h3>
                         <div class="road-meta">
                             <a href="https://4excelerate.org/" class="company-link" target="_blank">Excelerate</a> • Dec 2025 - Jan 2026
+                            <span style="color: #E6E3DC; margin: 0 5px;">|</span>
+                            <a href="#" class="cert-btn">Cert</a>
+                            <a href="#" class="cert-btn">LOR</a>
                         </div>
                         <ul class="road-bullets">
                             <li>Led a global team to deliver two projects on time, bridging time zones to hit every deadline.</li>
@@ -477,7 +489,7 @@
                     </div>
                 </div>
 
-                <!-- Item 4: Excelerate Trainee -->
+                <!-- Item 4: Excelerate Trainee (Cleaned up buttons) -->
                 <div class="road-item">
                     <div class="road-marker"></div>
                     <div class="road-content">
@@ -622,3 +634,68 @@
                 learning: "The importance of 'Happy Path' vs 'Edge Cases'. Handling errors gracefully (like failed uploads) is just as important as the success state.",
                 metrics:[
                     { val: "+30%", lbl: "Completion Rate" },
+                    { val: "-50%", lbl: "Support Tickets" },
+                    { val: "2min", lbl: "Avg Time Saved" }
+                ]
+            }
+        ];
+
+        const modal = document.getElementById('modal');
+
+        function openModal(index) {
+            const p = projects[index];
+            document.getElementById('m-title').innerText = p.title;
+            document.getElementById('m-cat').innerText = "Epic: " + p.category;
+            document.getElementById('m-problem').innerText = p.problem;
+            document.getElementById('m-solution').innerText = p.solution;
+            document.getElementById('m-learning').innerText = p.learning;
+
+            const mGrid = document.getElementById('m-metrics');
+            mGrid.innerHTML = '';
+            p.metrics.forEach(m => {
+                mGrid.innerHTML += `
+                    <div class="metric-box">
+                        <span class="m-val">${m.val}</span>
+                        <span class="m-lbl">${m.lbl}</span>
+                    </div>
+                `;
+            });
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        /* --- ANIMATIONS --- */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        const timelineObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.getElementById('timeline').classList.add('active');
+                }
+            });
+        }, { threshold: 0.15 }); 
+        timelineObserver.observe(document.getElementById('experience'));
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            const btn = document.getElementById('sendBtn');
+            btn.innerText = "Sent ✓";
+            btn.style.background = "#4CAF50";
+            btn.style.color = "white";
+        });
+    </script>
+</body>
+</html>
